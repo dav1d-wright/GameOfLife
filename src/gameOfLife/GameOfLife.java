@@ -2,7 +2,6 @@ package gameOfLife;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.applet.*;
 
 /*
  	<applet code ="AppletFrame" width=300 height =50>

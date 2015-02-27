@@ -8,17 +8,39 @@ import java.awt.event.*;
  	</applet>
  */
 
-public class GameOfLife extends Frame{
+public class GameOfLife extends Frame implements ActionListener{
+	Button cBStart;
+	String cSMsg = "";
+	
 	GameOfLife (String aTitle) {
 		super(aTitle);
 		
 		MyWindowAdapter cAdapter = new MyWindowAdapter(this);
-		
 		addWindowListener(cAdapter);
+		
+		cBStart = new Button("Start");
+		cBStart.addActionListener(this);
+		
+		this.setLayout(new GridLayout(2,2));
+		this.setBackground(Color.white);
+		this.add(cBStart);
+		cBStart.setSize(20,40);
 	}
 	
 	public void paint (Graphics aGraphics){
 		aGraphics.drawString("This is in frame window", 10, 40);
+		
+		aGraphics.drawString(cSMsg, 10, 50);
+	}
+	
+	public void actionPerformed(ActionEvent aActionEvent) {
+		String str = aActionEvent.getActionCommand();
+		
+		if(str.equals("Start")) {
+			cSMsg = "You pressed Start";
+		}
+		
+		this.repaint();
 	}
 }
 

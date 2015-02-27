@@ -21,20 +21,33 @@ public class GameOfLife extends Frame implements ActionListener{
 		addWindowListener(cAdapter);
 		
 		GridBagLayout cLayout = new GridBagLayout();
-		GridBagConstraints cConstraints = new GridBagConstraints();
+		GridBagConstraints[] cConstraints = new GridBagConstraints[3];
 		
-		cConstraints.gridx = 0;
-		cConstraints.gridy = 1;
+		for(int i = 0; i < 3; i++) {
+			cConstraints[i] = new GridBagConstraints();
+		}
+	
+		cConstraints[0].gridx = 0;
+		cConstraints[0].gridy = 1;
+		cConstraints[1].gridx = 1;
+		cConstraints[1].gridy = 1;
+		cConstraints[2].gridx = 2;
+		cConstraints[2].gridy = 1;
 		
 		cBStart = new Button("Start");
 		cBStart.addActionListener(this);
-		cTSeed = new TextField();
-		cLSeed = new Label("Seed percentage (0 <= x <= 1):")
-		// TODO: HANDLE AND POSITION LABEL AND TEXTFIELDE
-		cLayout.setConstraints(cBStart, cConstraints);
+		cTSeed = new TextField(5);
+		cTSeed.addActionListener(this);
+		cLSeed = new Label("Seed percentage (0 <= x <= 1):");
+		
+		cLayout.setConstraints(cLSeed, cConstraints[0]);
+		cLayout.setConstraints(cTSeed, cConstraints[1]);
+		cLayout.setConstraints(cBStart, cConstraints[2]);
 		
 		this.setLayout(cLayout);
 		this.setBackground(Color.white);
+		this.add(cTSeed);
+		this.add(cLSeed);
 		this.add(cBStart);
 	}
 	

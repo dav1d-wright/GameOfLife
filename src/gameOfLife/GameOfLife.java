@@ -29,10 +29,17 @@ public class GameOfLife extends Frame implements ActionListener{
 	
 		cConstraints[0].gridx = 0;
 		cConstraints[0].gridy = 1;
+		cConstraints[0].insets = new Insets(1,1,1,1);
+
 		cConstraints[1].gridx = 1;
 		cConstraints[1].gridy = 1;
-		cConstraints[2].gridx = 2;
-		cConstraints[2].gridy = 1;
+		cConstraints[1].insets = new Insets(1,1,1,1);
+
+		
+		cConstraints[2].gridx = 0;
+		cConstraints[2].gridy = 2;
+		cConstraints[2].insets = new Insets(1,1,1,1);
+
 		
 		cBStart = new Button("Start");
 		cBStart.addActionListener(this);

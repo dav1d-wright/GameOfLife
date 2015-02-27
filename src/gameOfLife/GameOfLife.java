@@ -10,6 +10,8 @@ import java.awt.event.*;
 
 public class GameOfLife extends Frame implements ActionListener{
 	Button cBStart;
+	TextField cTSeed;
+	Label cLSeed;
 	String cSMsg = "";
 	
 	GameOfLife (String aTitle) {
@@ -18,10 +20,20 @@ public class GameOfLife extends Frame implements ActionListener{
 		MyWindowAdapter cAdapter = new MyWindowAdapter(this);
 		addWindowListener(cAdapter);
 		
+		GridBagLayout cLayout = new GridBagLayout();
+		GridBagConstraints cConstraints = new GridBagConstraints();
+		
+		cConstraints.gridx = 0;
+		cConstraints.gridy = 1;
+		
 		cBStart = new Button("Start");
 		cBStart.addActionListener(this);
+		cTSeed = new TextField();
+		cLSeed = new Label("Seed percentage (0 <= x <= 1):")
+		// TODO: HANDLE AND POSITION LABEL AND TEXTFIELDE
+		cLayout.setConstraints(cBStart, cConstraints);
 		
-		this.setLayout(new GridBagLayout());
+		this.setLayout(cLayout);
 		this.setBackground(Color.white);
 		this.add(cBStart);
 	}

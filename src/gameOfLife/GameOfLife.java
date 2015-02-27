@@ -21,10 +21,9 @@ public class GameOfLife extends Frame implements ActionListener{
 		cBStart = new Button("Start");
 		cBStart.addActionListener(this);
 		
-		this.setLayout(new GridLayout(2,2));
+		this.setLayout(new GridBagLayout());
 		this.setBackground(Color.white);
 		this.add(cBStart);
-		cBStart.setSize(20,40);
 	}
 	
 	public void paint (Graphics aGraphics){

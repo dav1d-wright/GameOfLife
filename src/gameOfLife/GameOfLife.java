@@ -2,6 +2,8 @@ package gameOfLife;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 
 /*
  	<applet code ="AppletFrame" width=300 height =50>
@@ -13,6 +15,11 @@ public class GameOfLife extends Frame implements ActionListener{
 	TextField cTSeed;
 	Label cLSeed;
 	String cSMsg = "";
+	Canvas cCanvas;
+	int iNumElements = 4;
+	int iGameWidth = 600;
+	int iGameHeight = 600;
+	Point[][] cPoints;
 	
 	GameOfLife (String aTitle) {
 		super(aTitle);
@@ -21,12 +28,24 @@ public class GameOfLife extends Frame implements ActionListener{
 		addWindowListener(cAdapter);
 		
 		GridBagLayout cLayout = new GridBagLayout();
-		GridBagConstraints[] cConstraints = new GridBagConstraints[3];
+		GridBagConstraints[] cConstraints = new GridBagConstraints[iNumElements];		
 		
-		for(int i = 0; i < 3; i++) {
+		for(int i = 0; i < iNumElements; i++) {
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
+		cCanvas = new Canvas();
+		cCanvas.setSize(iGameWidth, iGameHeight);
+		
+		cPoints = new Point[iGameHeight][iGameWidth];
+		for(int i = 0; i < iGameHeight; i++) {
+			for(int j = 0; j < iGameWidth; j++) {
+				cPoints[i][j] = new Point(j,i);
+			}
+		}
+		
+		
+		
 		cConstraints[0].gridx = 0;
 		cConstraints[0].gridy = 1;
 		cConstraints[0].insets = new Insets(1,1,1,1);
@@ -39,6 +58,10 @@ public class GameOfLife extends Frame implements ActionListener{
 		cConstraints[2].gridx = 0;
 		cConstraints[2].gridy = 2;
 		cConstraints[2].insets = new Insets(1,1,1,1);
+		
+		cConstraints[3].gridx = 0;
+		cConstraints[3].gridy = 0;
+		cConstraints[3].insets = new Insets(2,2,2,2);
 
 		
 		cBStart = new Button("Start");
@@ -50,17 +73,18 @@ public class GameOfLife extends Frame implements ActionListener{
 		cLayout.setConstraints(cLSeed, cConstraints[0]);
 		cLayout.setConstraints(cTSeed, cConstraints[1]);
 		cLayout.setConstraints(cBStart, cConstraints[2]);
+		cLayout.setConstraints(cCanvas, cConstraints[3]);
 		
 		this.setLayout(cLayout);
 		this.setBackground(Color.white);
 		this.add(cTSeed);
 		this.add(cLSeed);
 		this.add(cBStart);
+		this.add(cCanvas);
 	}
 	
 	public void paint (Graphics aGraphics){
 		aGraphics.drawString("This is in frame window", 10, 40);
-		
 		aGraphics.drawString(cSMsg, 10, 50);
 	}
 	

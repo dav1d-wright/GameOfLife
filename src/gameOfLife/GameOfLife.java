@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
-
+import java.util.Random;
 /*
  	<applet code ="AppletFrame" width=300 height =50>
  	</applet>
@@ -63,7 +63,6 @@ public class GameOfLife extends Frame implements ActionListener{
 		cConstraints[3].gridy = 0;
 		cConstraints[3].insets = new Insets(2,2,2,2);
 
-		
 		cBStart = new Button("Start");
 		cBStart.addActionListener(this);
 		cTSeed = new TextField(5);
@@ -97,6 +96,12 @@ public class GameOfLife extends Frame implements ActionListener{
 		
 		this.repaint();
 	}
+	
+	public int countNeighbours () {
+		int iNeighbours = 0;
+		
+		return iNeighbours;
+	}
 }
 
 class MyWindowAdapter extends WindowAdapter {
@@ -109,4 +114,45 @@ class MyWindowAdapter extends WindowAdapter {
 	public void windowClosing(WindowEvent a_cWindowEvent) {
 		m_cGameOfLife.setVisible(false);
 	}
+}
+
+class GOLCanvas extends Canvas {
+	private int m_iWidth;
+	private int m_iHeight;
+	private Boolean[][] m_bPoints;
+	private double m_dSeed;
+	private Random m_cRnd;
+	
+	GOLCanvas(int aWidth, int aHeight, double aSeed) {
+		m_iWidth = aWidth;
+		m_iHeight = aHeight;
+		m_dSeed = aSeed;
+		m_cRnd.setSeed(m_cRnd.nextLong());
+		m_bPoints = new Boolean[aHeight][aWidth];
+		
+		for(int i = 0; i < aHeight; i++) {
+			for(int j = 0; j < aWidth; j++) {
+				m_bPoints[i][j] = new Boolean(false);
+			}
+		}
+	}
+	
+	public void init() {
+		m_bPoints = new Boolean[aHeight][aWidth];
+		for(int i = 0; i < aHeight; i++) {
+			for(int j = 0; j < aWidth; j++) {
+				m_bPoints[i][j] = this.getRandomBoolean(m_dSeed);
+			}
+		}
+	}
+	
+	private Boolean getRandomBoolean(double aProbability) {
+		return m_cRnd.nextDouble() < m_dSeed;
+	}
+	public void paint(Graphics aGraphics) {
+		// TODO apply rules here
+		
+		// TODO this.drawline(int x, int y, int x, int y) (??)
+	}
+	
 }

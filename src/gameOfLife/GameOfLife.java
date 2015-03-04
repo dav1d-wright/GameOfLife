@@ -15,11 +15,10 @@ public class GameOfLife extends Frame implements ActionListener{
 	TextField cTSeed;
 	Label cLSeed;
 	String cSMsg = "";
-	Canvas cCanvas;
+	GOLCanvas cCanvas;
 	int iNumElements = 4;
 	int iGameWidth = 600;
 	int iGameHeight = 600;
-	Point[][] cPoints;
 	
 	GameOfLife (String aTitle) {
 		super(aTitle);
@@ -34,16 +33,9 @@ public class GameOfLife extends Frame implements ActionListener{
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new Canvas();
-		cCanvas.setSize(iGameWidth, iGameHeight);
-		
-		cPoints = new Point[iGameHeight][iGameWidth];
-		for(int i = 0; i < iGameHeight; i++) {
-			for(int j = 0; j < iGameWidth; j++) {
-				cPoints[i][j] = new Point(j,i);
-			}
-		}
-		
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.35);
+		cCanvas.init();
+		cCanvas.setSize(iGameWidth, iGameHeight);		
 		
 		
 		cConstraints[0].gridx = 0;
@@ -80,6 +72,7 @@ public class GameOfLife extends Frame implements ActionListener{
 		this.add(cLSeed);
 		this.add(cBStart);
 		this.add(cCanvas);
+		this.repaint();
 	}
 	
 	public void paint (Graphics aGraphics){
@@ -95,12 +88,6 @@ public class GameOfLife extends Frame implements ActionListener{
 		}
 		
 		this.repaint();
-	}
-	
-	public int countNeighbours () {
-		int iNeighbours = 0;
-		
-		return iNeighbours;
 	}
 }
 
@@ -120,6 +107,7 @@ class GOLCanvas extends Canvas {
 	private int m_iWidth;
 	private int m_iHeight;
 	private Boolean[][] m_bPoints;
+	private int[][] m_iNeighbours;
 	private double m_dSeed;
 	private Random m_cRnd;
 	
@@ -127,8 +115,10 @@ class GOLCanvas extends Canvas {
 		m_iWidth = aWidth;
 		m_iHeight = aHeight;
 		m_dSeed = aSeed;
+		m_cRnd = new Random();
 		m_cRnd.setSeed(m_cRnd.nextLong());
-		m_bPoints = new Boolean[aHeight][aWidth];
+		m_bPoints = new Boolean[m_iHeight][m_iWidth];
+		m_iNeighbours = new int[m_iHeight][m_iWidth];
 		
 		for(int i = 0; i < aHeight; i++) {
 			for(int j = 0; j < aWidth; j++) {
@@ -138,9 +128,9 @@ class GOLCanvas extends Canvas {
 	}
 	
 	public void init() {
-		m_bPoints = new Boolean[aHeight][aWidth];
-		for(int i = 0; i < aHeight; i++) {
-			for(int j = 0; j < aWidth; j++) {
+		m_bPoints = new Boolean[m_iHeight][m_iWidth];
+		for(int i = 0; i < m_iHeight; i++) {
+			for(int j = 0; j < m_iWidth; j++) {
 				m_bPoints[i][j] = this.getRandomBoolean(m_dSeed);
 			}
 		}
@@ -149,10 +139,28 @@ class GOLCanvas extends Canvas {
 	private Boolean getRandomBoolean(double aProbability) {
 		return m_cRnd.nextDouble() < m_dSeed;
 	}
-	public void paint(Graphics aGraphics) {
-		// TODO apply rules here
-		
-		// TODO this.drawline(int x, int y, int x, int y) (??)
+	
+	public void countNeighbours () {		
+		for(int i = 0; i < m_iHeight; i++) {
+			for(int j = 0; j < m_iWidth; j++) {
+				if (m_bPoints[i][j]){
+					//TODO count neighbours;
+				}
+			}
+		}	
 	}
 	
+	public void calcNextStep () {
+		// TODO apply rules here
+	}
+	public void paint(Graphics aGraphics) {
+		
+			for(int i = 0; i < m_iHeight; i++) {
+				for(int j = 0; j < m_iWidth; j++) {
+					if (m_bPoints[i][j]){
+						aGraphics.drawLine(i, j, i, j);
+					}
+				}
+			}	
+		}
 }

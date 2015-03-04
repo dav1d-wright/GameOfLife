@@ -165,7 +165,7 @@ class GOLCanvas extends Canvas {
 		
 			for(int i = 0; i < m_iHeight; i++) {
 				for(int j = 0; j < m_iWidth; j++) {
-					if (m_bPoints[i][j]){
+					if (m_iPoints[i][j] == 1){
 						aGraphics.drawLine(i, j, i, j);
 					}
 				}

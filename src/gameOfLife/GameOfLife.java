@@ -106,7 +106,7 @@ class MyWindowAdapter extends WindowAdapter {
 class GOLCanvas extends Canvas {
 	private int m_iWidth;
 	private int m_iHeight;
-	private Boolean[][] m_bPoints;
+	private int[][] m_iPoints;
 	private int[][] m_iNeighbours;
 	private double m_dSeed;
 	private Random m_cRnd;
@@ -117,34 +117,42 @@ class GOLCanvas extends Canvas {
 		m_dSeed = aSeed;
 		m_cRnd = new Random();
 		m_cRnd.setSeed(m_cRnd.nextLong());
-		m_bPoints = new Boolean[m_iHeight][m_iWidth];
+		m_iPoints = new int[m_iHeight][m_iWidth];
 		m_iNeighbours = new int[m_iHeight][m_iWidth];
-		
-		for(int i = 0; i < aHeight; i++) {
-			for(int j = 0; j < aWidth; j++) {
-				m_bPoints[i][j] = new Boolean(false);
-			}
-		}
 	}
 	
 	public void init() {
-		m_bPoints = new Boolean[m_iHeight][m_iWidth];
 		for(int i = 0; i < m_iHeight; i++) {
 			for(int j = 0; j < m_iWidth; j++) {
-				m_bPoints[i][j] = this.getRandomBoolean(m_dSeed);
+				m_iPoints[i][j] = this.getRandomInt(m_dSeed);
 			}
 		}
 	}
 	
-	private Boolean getRandomBoolean(double aProbability) {
-		return m_cRnd.nextDouble() < m_dSeed;
+	private int getRandomInt(double aProbability) {
+		return (m_cRnd.nextDouble() < m_dSeed) ? 1 : 0;
 	}
 	
-	public void countNeighbours () {		
-		for(int i = 0; i < m_iHeight; i++) {
-			for(int j = 0; j < m_iWidth; j++) {
-				if (m_bPoints[i][j]){
-					//TODO count neighbours;
+	public void countNeighbours () {
+		// count neighbours for corner elements
+		m_iNeighbours[0][0] = m_iNeighbours[0][1] + m_iNeighbours[1][1] + m_iNeighbours[1][0];
+		m_iNeighbours[0][m_iHeight-1] = m_iNeighbours[0][m_iHeight-2] + m_iNeighbours[1][m_iHeight-2] + m_iNeighbours[1][m_iHeight-1];
+		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_iNeighbours[m_iWidth-1][m_iHeight-2] + m_iNeighbours[m_iWidth-2][m_iHeight-2] + m_iNeighbours[m_iWidth-2][m_iHeight-1];
+		m_iNeighbours[m_iWidth-1][0] = m_iNeighbours[m_iWidth-1][1] + m_iNeighbours[m_iWidth-2][1] + m_iNeighbours[m_iWidth-2][0];
+
+		// TODO count first row (without corners)
+		
+		// TODO count last row  (without corners)
+		
+		// TODO count first column  (without corners)
+		
+		// TODO count last column  (without corners)
+		
+		// count neighbours of inner matrix elements without corners and first/last rows
+		for(int i = 1; i < m_iHeight - 1; i++) {
+			for(int j = 1; j < m_iWidth - 1; j++) {
+				if (m_iPoints[i][j] == 1){
+					// TODO count all 8 neighbours;
 				}
 			}
 		}	

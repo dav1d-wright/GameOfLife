@@ -17,11 +17,14 @@ public class GameOfLife extends Frame implements ActionListener{
 	String cSMsg = "";
 	GOLCanvas cCanvas;
 	int iNumElements = 4;
-	int iGameWidth = 600;
-	int iGameHeight = 600;
+	int iGameWidth;
+	int iGameHeight;
 	
-	GameOfLife (String aTitle) {
+	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight) {
 		super(aTitle);
+		this.setSize(aFrameWidth, aFrameHeight);
+		iGameWidth = aGameWidth;
+		iGameHeight = aGameHeight;
 		
 		MyWindowAdapter cAdapter = new MyWindowAdapter(this);
 		addWindowListener(cAdapter);
@@ -135,31 +138,52 @@ class GOLCanvas extends Canvas {
 	
 	public void countNeighbours () {
 		// count neighbours for corner elements
-		m_iNeighbours[0][0] = m_iNeighbours[0][1] + m_iNeighbours[1][1] + m_iNeighbours[1][0];
-		m_iNeighbours[0][m_iHeight-1] = m_iNeighbours[0][m_iHeight-2] + m_iNeighbours[1][m_iHeight-2] + m_iNeighbours[1][m_iHeight-1];
-		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_iNeighbours[m_iWidth-1][m_iHeight-2] + m_iNeighbours[m_iWidth-2][m_iHeight-2] + m_iNeighbours[m_iWidth-2][m_iHeight-1];
-		m_iNeighbours[m_iWidth-1][0] = m_iNeighbours[m_iWidth-1][1] + m_iNeighbours[m_iWidth-2][1] + m_iNeighbours[m_iWidth-2][0];
+		m_iNeighbours[0][0] = m_iPoints[0][1] + m_iPoints[1][1] + m_iPoints[1][0];
+		m_iNeighbours[0][m_iHeight-1] = m_iPoints[0][m_iHeight-2] + m_iPoints[1][m_iHeight-2] + m_iPoints[1][m_iHeight-1];
+		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_iPoints[m_iWidth-1][m_iHeight-2] + m_iPoints[m_iWidth-2][m_iHeight-2] + m_iPoints[m_iWidth-2][m_iHeight-1];
+		m_iNeighbours[m_iWidth-1][0] = m_iPoints[m_iWidth-1][1] + m_iPoints[m_iWidth-2][1] + m_iPoints[m_iWidth-2][0];
 
-		// TODO count first row (without corners)
+		// count neighbours of first and last rows without corners
+		for (int i = 1; i < m_iWidth - 1; i++) {
+			m_iNeighbours[i][0] = m_iPoints[i-1][0] + m_iPoints[i][1] + m_iPoints[i+1][0];
+			m_iNeighbours[i][m_iHeight-1] = m_iPoints[i-1][m_iHeight-1] + m_iPoints[i][m_iHeight-2] + m_iPoints[i+1][m_iHeight-1];
+		}
 		
-		// TODO count last row  (without corners)
-		
-		// TODO count first column  (without corners)
-		
-		// TODO count last column  (without corners)
+		// count neighbours of first and last columns without corners
+		for (int i = 1; i < m_iHeight - 1; i++) {
+			m_iNeighbours[0][i] = m_iPoints[0][i-1] + m_iPoints[1][i] + m_iPoints[0][i+1];
+			m_iNeighbours[m_iWidth-1][i] = m_iPoints[m_iWidth-1][i-1] + m_iPoints[m_iWidth-2][i] + m_iPoints[m_iWidth-1][i+1];
+		}
 		
 		// count neighbours of inner matrix elements without corners and first/last rows
 		for(int i = 1; i < m_iHeight - 1; i++) {
 			for(int j = 1; j < m_iWidth - 1; j++) {
 				if (m_iPoints[i][j] == 1){
-					// TODO count all 8 neighbours;
+					m_iNeighbours[i][j] = m_iPoints[i-1][j] + m_iPoints[i-1][j-1] + m_iPoints[i-1][j+1] + m_iPoints[i][j-1]  +
+							m_iPoints[i][j+1] + m_iPoints[i+1][j+1] + m_iPoints[i+1][j-1] + m_iPoints[i+1][j];
+							
 				}
 			}
 		}	
 	}
 	
 	public void calcNextStep () {
-		// TODO apply rules here
+		for(int i = 0; i < m_iHeight - 1; i++) {
+			for(int j = 0; j < m_iWidth - 1; j++) {
+				if (m_iPoints[i][j] == 1){
+					if((m_iNeighbours[i][j] < 2) || (m_iNeighbours[i][j] > 3)){
+						// cell dies of underpopulation or overcrowding
+						m_iPoints[i][j] = 0;
+					}
+				}
+				else {
+					if (m_iNeighbours[i][j] == 3) {
+						// cell becomes alive thanks to reproduction
+						m_iPoints[i][j] = 1;
+					}
+				}
+			}
+		}
 	}
 	public void paint(Graphics aGraphics) {
 		

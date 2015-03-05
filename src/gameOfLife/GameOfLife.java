@@ -2,41 +2,46 @@ package gameOfLife;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
+import javax.swing.*;
 import java.util.Random;
 /*
  	<applet code ="AppletFrame" width=300 height =50>
  	</applet>
  */
 
-public class GameOfLife extends Frame implements ActionListener{
-	Button cBStart;
-	TextField cTSeed;
-	Label cLSeed;
+public class GameOfLife extends JFrame implements ActionListener{
+	JButton cBStart;
+	JTextField cTSeed;
+	JLabel cLSeed;
 	String cSMsg = "";
 	GOLCanvas cCanvas;
 	int iNumElements = 4;
 	int iGameWidth;
 	int iGameHeight;
+	private Boolean m_bRunning;
 	
 	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight) {
 		super(aTitle);
 		this.setSize(aFrameWidth, aFrameHeight);
 		iGameWidth = aGameWidth;
 		iGameHeight = aGameHeight;
+		m_bRunning = false;
 		
-		MyWindowAdapter cAdapter = new MyWindowAdapter(this);
-		addWindowListener(cAdapter);
-		
-		GridBagLayout cLayout = new GridBagLayout();
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                this.stop();
+                super.windowClosing(e);
+                System.exit(0);
+            }
+        }		GridBagLayout cLayout = new GridBagLayout();
 		GridBagConstraints[] cConstraints = new GridBagConstraints[iNumElements];		
 		
 		for(int i = 0; i < iNumElements; i++) {
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.35);
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.99);
 		cCanvas.init();
 		cCanvas.setSize(iGameWidth, iGameHeight);		
 		
@@ -58,11 +63,11 @@ public class GameOfLife extends Frame implements ActionListener{
 		cConstraints[3].gridy = 0;
 		cConstraints[3].insets = new Insets(2,2,2,2);
 
-		cBStart = new Button("Start");
+		cBStart = new JButton("Start");
 		cBStart.addActionListener(this);
-		cTSeed = new TextField(5);
+		cTSeed = new JTextField(5);
 		cTSeed.addActionListener(this);
-		cLSeed = new Label("Seed percentage (0 <= x <= 1):");
+		cLSeed = new JLabel("Seed percentage (0 <= x <= 1):");
 		
 		cLayout.setConstraints(cLSeed, cConstraints[0]);
 		cLayout.setConstraints(cTSeed, cConstraints[1]);
@@ -77,7 +82,15 @@ public class GameOfLife extends Frame implements ActionListener{
 		this.add(cCanvas);
 		this.repaint();
 	}
-	
+	public synchronized void stop(void) {
+		if (m_bRunning) {
+			m_bRunning = false;
+			boolean bRetry = true;
+			while (bRetry) {
+				// TODO implement rest of stop from stackexchange answer
+			}
+		}
+	}
 	public void paint (Graphics aGraphics){
 		aGraphics.drawString("This is in frame window", 10, 40);
 		aGraphics.drawString(cSMsg, 10, 50);
@@ -91,18 +104,6 @@ public class GameOfLife extends Frame implements ActionListener{
 		}
 		
 		this.repaint();
-	}
-}
-
-class MyWindowAdapter extends WindowAdapter {
-	GameOfLife m_cGameOfLife;
-	
-	public MyWindowAdapter(GameOfLife a_cGameOfLife) {
-		this.m_cGameOfLife = a_cGameOfLife;
-	}
-	
-	public void windowClosing(WindowEvent a_cWindowEvent) {
-		m_cGameOfLife.setVisible(false);
 	}
 }
 
@@ -121,7 +122,7 @@ class GOLCanvas extends Canvas {
 		m_cRnd = new Random();
 		m_cRnd.setSeed(m_cRnd.nextLong());
 		m_iPoints = new int[m_iHeight][m_iWidth];
-		m_iNeighbours = new int[m_iHeight][m_iWidth];
+		m_iNeighbours = new int[m_iHeight][m_iWidth];	
 	}
 	
 	public void init() {
@@ -182,14 +183,18 @@ class GOLCanvas extends Canvas {
 			}
 		}
 	}
+	@Override
 	public void paint(Graphics aGraphics) {
-		
-			for(int i = 0; i < m_iHeight; i++) {
-				for(int j = 0; j < m_iWidth; j++) {
-					if (m_iPoints[i][j] == 1){
-						aGraphics.drawLine(i, j, i, j);
-					}
+		for(int i = 0; i < m_iHeight; i++) {
+			for(int j = 0; j < m_iWidth; j++) {
+				if (m_iPoints[i][j] == 1){
+					aGraphics.drawLine(i, j, i, j);
 				}
-			}	
+			}
 		}
+	}
+}
+
+class GOLCalculator implements Runnable {
+	
 }

@@ -143,13 +143,13 @@ class GOLCanvas extends Canvas {
 		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_iPoints[m_iWidth-1][m_iHeight-2] + m_iPoints[m_iWidth-2][m_iHeight-2] + m_iPoints[m_iWidth-2][m_iHeight-1];
 		m_iNeighbours[m_iWidth-1][0] = m_iPoints[m_iWidth-1][1] + m_iPoints[m_iWidth-2][1] + m_iPoints[m_iWidth-2][0];
 
-		// count neighbours of first and last rows without corners
+		// count neighbours of first and last columns without corners
 		for (int i = 1; i < m_iWidth - 1; i++) {
 			m_iNeighbours[i][0] = m_iPoints[i-1][0] + m_iPoints[i][1] + m_iPoints[i+1][0];
 			m_iNeighbours[i][m_iHeight-1] = m_iPoints[i-1][m_iHeight-1] + m_iPoints[i][m_iHeight-2] + m_iPoints[i+1][m_iHeight-1];
 		}
 		
-		// count neighbours of first and last columns without corners
+		// count neighbours of first and last rows without corners
 		for (int i = 1; i < m_iHeight - 1; i++) {
 			m_iNeighbours[0][i] = m_iPoints[0][i-1] + m_iPoints[1][i] + m_iPoints[0][i+1];
 			m_iNeighbours[m_iWidth-1][i] = m_iPoints[m_iWidth-1][i-1] + m_iPoints[m_iWidth-2][i] + m_iPoints[m_iWidth-1][i+1];
@@ -158,11 +158,8 @@ class GOLCanvas extends Canvas {
 		// count neighbours of inner matrix elements without corners and first/last rows
 		for(int i = 1; i < m_iHeight - 1; i++) {
 			for(int j = 1; j < m_iWidth - 1; j++) {
-				if (m_iPoints[i][j] == 1){
 					m_iNeighbours[i][j] = m_iPoints[i-1][j] + m_iPoints[i-1][j-1] + m_iPoints[i-1][j+1] + m_iPoints[i][j-1]  +
-							m_iPoints[i][j+1] + m_iPoints[i+1][j+1] + m_iPoints[i+1][j-1] + m_iPoints[i+1][j];
-							
-				}
+							m_iPoints[i][j+1] + m_iPoints[i+1][j+1] + m_iPoints[i+1][j-1] + m_iPoints[i+1][j];		
 			}
 		}	
 	}

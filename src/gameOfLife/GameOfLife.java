@@ -2,6 +2,7 @@ package gameOfLife;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
 import java.util.Random;
@@ -113,6 +114,7 @@ class GOLCanvas extends Canvas {
 	private int[][] m_iNeighbours;
 	private double m_dSeed;
 	private Random m_cRnd;
+	private BufferedImage cBackGroundImage = null;
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) {
 		m_iWidth = aWidth;
@@ -122,6 +124,8 @@ class GOLCanvas extends Canvas {
 		m_cRnd.setSeed(m_cRnd.nextLong());
 		m_iPoints = new int[m_iHeight][m_iWidth];
 		m_iNeighbours = new int[m_iHeight][m_iWidth];
+		cBackGroundImage = new BufferedImage(m_iWidth, m_iHeight, BufferedImage.TYPE_INT_RGB);
+
 	}
 	
 	public void init() {
@@ -183,13 +187,20 @@ class GOLCanvas extends Canvas {
 		}
 	}
 	public void paint(Graphics aGraphics) {
+		// store on screen graphics
+		Graphics cScreenGraphics = aGraphics;
+		// render on background image
+		aGraphics = cBackGroundImage.getGraphics();
 		
-			for(int i = 0; i < m_iHeight; i++) {
-				for(int j = 0; j < m_iWidth; j++) {
-					if (m_iPoints[i][j] == 1){
-						aGraphics.drawLine(i, j, i, j);
-					}
+		for(int i = 0; i < m_iHeight; i++) {
+			for(int j = 0; j < m_iWidth; j++) {
+				if (m_iPoints[i][j] == 1){
+					aGraphics.drawLine(i, j, i, j);
 				}
-			}	
+			}
 		}
+		
+		// rendering is done, draw background image to on screen graphics
+		cScreenGraphics.drawImage(cBackGroundImage, 0, 0, null);
+	}
 }

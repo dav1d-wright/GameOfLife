@@ -41,7 +41,7 @@ public class GameOfLife extends JFrame implements ActionListener{
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.99);
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.5);
 		cCanvas.init();
 		cCanvas.setSize(iGameWidth, iGameHeight);		
 		
@@ -103,7 +103,7 @@ public class GameOfLife extends JFrame implements ActionListener{
 			cSMsg = "You pressed Start";
 		}
 		
-		this.repaint();
+		this.update(this.getGraphics());
 	}
 }
 
@@ -115,13 +115,13 @@ class GOLCanvas extends Canvas {
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
+
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) {
 		m_iWidth = aWidth;
 		m_iHeight = aHeight;
 		m_dSeed = aSeed;
 		m_cRnd = new Random();
-		m_cRnd.setSeed(m_cRnd.nextLong());
 		m_iPoints = new int[m_iHeight][m_iWidth];
 		m_iNeighbours = new int[m_iHeight][m_iWidth];
 		cBackGroundImage = new BufferedImage(m_iWidth, m_iHeight, BufferedImage.TYPE_INT_RGB);
@@ -129,6 +129,8 @@ class GOLCanvas extends Canvas {
 	}
 	
 	public void init() {
+		m_cRnd.setSeed(m_cRnd.nextLong());
+
 		for(int i = 0; i < m_iHeight; i++) {
 			for(int j = 0; j < m_iWidth; j++) {
 				m_iPoints[i][j] = this.getRandomInt(m_dSeed);
@@ -192,17 +194,20 @@ class GOLCanvas extends Canvas {
 		Graphics cScreenGraphics = aGraphics;
 		// render on background image
 		aGraphics = cBackGroundImage.getGraphics();
-
 		for(int i = 0; i < m_iHeight; i++) {
 			for(int j = 0; j < m_iWidth; j++) {
 				if (m_iPoints[i][j] == 1){
 					aGraphics.drawLine(i, j, i, j);
 				}
 			}
-		}
-		
+		}		
 		// rendering is done, draw background image to on screen graphics
 		cScreenGraphics.drawImage(cBackGroundImage, 0, 0, null);
+	}
+	
+	@Override
+	public void update(Graphics aGraphics) {
+		paint(aGraphics);
 	}
 }
 

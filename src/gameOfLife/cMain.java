@@ -9,7 +9,7 @@ public class cMain {
 		while(true){
 			cGameOfLife.cCanvas.countNeighbours();
 			cGameOfLife.cCanvas.calcNextStep();
-			cGameOfLife.cCanvas.repaint();			
+			cGameOfLife.cCanvas.update(cGameOfLife.cCanvas.getGraphics());			
 		}
 	}
 

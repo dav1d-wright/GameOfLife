@@ -6,10 +6,6 @@ import java.awt.image.*;
 import java.text.AttributedCharacterIterator;
 import javax.swing.*;
 import java.util.Random;
-/*
- 	<applet code ="AppletFrame" width=300 height =50>
- 	</applet>
- */
 
 public class GameOfLife extends JFrame implements ActionListener{
 	JButton cBStart;
@@ -32,11 +28,13 @@ public class GameOfLife extends JFrame implements ActionListener{
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                this.stop();
+                stop();
                 super.windowClosing(e);
                 System.exit(0);
             }
-        }		GridBagLayout cLayout = new GridBagLayout();
+        });
+        
+        GridBagLayout cLayout = new GridBagLayout();
 		GridBagConstraints[] cConstraints = new GridBagConstraints[iNumElements];		
 		
 		for(int i = 0; i < iNumElements; i++) {
@@ -84,7 +82,7 @@ public class GameOfLife extends JFrame implements ActionListener{
 		this.add(cCanvas);
 		this.repaint();
 	}
-	public synchronized void stop(void) {
+	public synchronized void stop() {
 		if (m_bRunning) {
 			m_bRunning = false;
 			boolean bRetry = true;
@@ -208,6 +206,6 @@ class GOLCanvas extends Canvas {
 	}
 }
 
-class GOLCalculator implements Runnable {
-	
-}
+//class GOLCalculator implements Runnable {
+//	
+//}

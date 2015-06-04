@@ -9,9 +9,7 @@ public class cMain {
 		while(true){
 			cGameOfLife.cCanvas.countNeighbours();
 			cGameOfLife.cCanvas.calcNextStep();
-			cGameOfLife.cCanvas.repaint();		
-			
-			for(int i = 0; i < 0xffffffff; i++);
+			cGameOfLife.cCanvas.repaint();			
 		}
 	}
 

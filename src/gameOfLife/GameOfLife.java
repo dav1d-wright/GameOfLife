@@ -41,7 +41,7 @@ public class GameOfLife extends JFrame implements ActionListener{
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.5);
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.2);
 		cCanvas.init();
 		cCanvas.setSize(iGameWidth * cCanvas.getCellWidth(), iGameHeight * cCanvas.getCellWidth());		
 		
@@ -101,6 +101,7 @@ public class GameOfLife extends JFrame implements ActionListener{
 		
 		if(str.equals("Start")) {
 			cSMsg = "You pressed Start";
+			cCanvas.init();
 		}
 		
 		this.update(this.getGraphics());

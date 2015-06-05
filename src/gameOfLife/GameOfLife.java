@@ -43,7 +43,7 @@ public class GameOfLife extends JFrame implements ActionListener{
 	
 		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.5);
 		cCanvas.init();
-		cCanvas.setSize(iGameWidth, iGameHeight);		
+		cCanvas.setSize(iGameWidth * cCanvas.getCellWidth(), iGameHeight * cCanvas.getCellWidth());		
 		
 		
 		cConstraints[0].gridx = 0;
@@ -110,21 +110,27 @@ public class GameOfLife extends JFrame implements ActionListener{
 class GOLCanvas extends Canvas {
 	private int m_iWidth;
 	private int m_iHeight;
-	private int[][] m_iPoints;
+	private GOLCell[][] m_cCells;
 	private int[][] m_iNeighbours;
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
-
+	private static final int m_iCellWidth = 3;
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) {
 		m_iWidth = aWidth;
 		m_iHeight = aHeight;
 		m_dSeed = aSeed;
 		m_cRnd = new Random();
-		m_iPoints = new int[m_iHeight][m_iWidth];
+		m_cCells = new GOLCell[m_iHeight][m_iWidth];
+		for(int i = 0; i < m_iHeight; i++) {
+			for(int j = 0; j < m_iWidth; j++) {
+					m_cCells[i][j] = new GOLCell(m_iCellWidth, i, j, false);
+			}
+		}
+		
 		m_iNeighbours = new int[m_iHeight][m_iWidth];
-		cBackGroundImage = new BufferedImage(m_iWidth, m_iHeight, BufferedImage.TYPE_INT_RGB);
+		cBackGroundImage = new BufferedImage(m_iWidth*m_iCellWidth, m_iHeight*m_iCellWidth, BufferedImage.TYPE_INT_RGB);
 
 	}
 	
@@ -133,7 +139,12 @@ class GOLCanvas extends Canvas {
 
 		for(int i = 0; i < m_iHeight; i++) {
 			for(int j = 0; j < m_iWidth; j++) {
-				m_iPoints[i][j] = this.getRandomInt(m_dSeed);
+				if (this.getRandomInt(m_dSeed) == 1) {
+					m_cCells[i][j].setIsAlive(true);
+					}
+				else {
+					m_cCells[i][j].setIsAlive(false);
+				}
 			}
 		}
 	}
@@ -142,30 +153,49 @@ class GOLCanvas extends Canvas {
 		return (m_cRnd.nextDouble() < m_dSeed) ? 1 : 0;
 	}
 	
+	public int getCellWidth () {
+		return m_iCellWidth;
+	}
 	public void countNeighbours () {
 		// count neighbours for corner elements
-		m_iNeighbours[0][0] = m_iPoints[0][1] + m_iPoints[1][1] + m_iPoints[1][0];
-		m_iNeighbours[0][m_iHeight-1] = m_iPoints[0][m_iHeight-2] + m_iPoints[1][m_iHeight-2] + m_iPoints[1][m_iHeight-1];
-		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_iPoints[m_iWidth-1][m_iHeight-2] + m_iPoints[m_iWidth-2][m_iHeight-2] + m_iPoints[m_iWidth-2][m_iHeight-1];
-		m_iNeighbours[m_iWidth-1][0] = m_iPoints[m_iWidth-1][1] + m_iPoints[m_iWidth-2][1] + m_iPoints[m_iWidth-2][0];
+		m_iNeighbours[0][0] = m_cCells[0][1].getIsAlive() + m_cCells[1][1].getIsAlive() + m_cCells[1][0].getIsAlive();
+		
+		m_iNeighbours[0][m_iHeight-1] = m_cCells[0][m_iHeight-2].getIsAlive() + m_cCells[1][m_iHeight-2].getIsAlive()
+				+ m_cCells[1][m_iHeight-1].getIsAlive();
+		
+		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_cCells[m_iWidth-1][m_iHeight-2].getIsAlive()
+				+ m_cCells[m_iWidth-2][m_iHeight-2].getIsAlive() + m_cCells[m_iWidth-2][m_iHeight-1].getIsAlive();
+		
+		m_iNeighbours[m_iWidth-1][0] = m_cCells[m_iWidth-1][1].getIsAlive() + m_cCells[m_iWidth-2][1].getIsAlive()
+				+ m_cCells[m_iWidth-2][0].getIsAlive();
 
 		// count neighbours of first and last columns without corners
 		for (int i = 1; i < m_iWidth - 1; i++) {
-			m_iNeighbours[i][0] = m_iPoints[i-1][0] + m_iPoints[i][1] + m_iPoints[i+1][0];
-			m_iNeighbours[i][m_iHeight-1] = m_iPoints[i-1][m_iHeight-1] + m_iPoints[i][m_iHeight-2] + m_iPoints[i+1][m_iHeight-1];
+			m_iNeighbours[i][0] = m_cCells[i-1][0].getIsAlive() + m_cCells[i][1].getIsAlive() + m_cCells[i+1][0].getIsAlive()
+					+ m_cCells[i-1][1].getIsAlive() + m_cCells[i+1][1].getIsAlive();
+			
+			m_iNeighbours[i][m_iHeight-1] = m_cCells[i][m_iWidth-2].getIsAlive() + m_cCells[i-1][m_iWidth-1].getIsAlive()
+					+ m_cCells[i+1][m_iWidth-1].getIsAlive() + m_cCells[i-1][m_iWidth-2].getIsAlive() + 
+					m_cCells[i+1][m_iWidth-2].getIsAlive();
 		}
 		
 		// count neighbours of first and last rows without corners
 		for (int i = 1; i < m_iHeight - 1; i++) {
-			m_iNeighbours[0][i] = m_iPoints[0][i-1] + m_iPoints[1][i] + m_iPoints[0][i+1];
-			m_iNeighbours[m_iWidth-1][i] = m_iPoints[m_iWidth-1][i-1] + m_iPoints[m_iWidth-2][i] + m_iPoints[m_iWidth-1][i+1];
+			m_iNeighbours[0][i] = m_cCells[0][i-1].getIsAlive() + m_cCells[1][i].getIsAlive() + m_cCells[0][i+1].getIsAlive()
+					+ m_cCells[1][i-1].getIsAlive() + m_cCells[1][i+1].getIsAlive();
+			
+			m_iNeighbours[m_iWidth-1][i] = m_cCells[m_iHeight-1][i-1].getIsAlive() + m_cCells[m_iHeight-2][i].getIsAlive()
+					+ m_cCells[m_iHeight-1][i+1].getIsAlive() + m_cCells[m_iHeight-2][i-1].getIsAlive()
+					+ m_cCells[m_iHeight-2][i+1].getIsAlive();
 		}
 		
 		// count neighbours of inner matrix elements without corners and first/last rows
 		for(int i = 1; i < m_iHeight - 1; i++) {
 			for(int j = 1; j < m_iWidth - 1; j++) {
-					m_iNeighbours[i][j] = m_iPoints[i-1][j] + m_iPoints[i-1][j-1] + m_iPoints[i-1][j+1] + m_iPoints[i][j-1]  +
-							m_iPoints[i][j+1] + m_iPoints[i+1][j+1] + m_iPoints[i+1][j-1] + m_iPoints[i+1][j];		
+					m_iNeighbours[i][j] = m_cCells[i-1][j].getIsAlive() + m_cCells[i-1][j-1].getIsAlive()
+							+ m_cCells[i-1][j+1].getIsAlive() + m_cCells[i][j-1].getIsAlive() 
+							+ m_cCells[i][j+1].getIsAlive() + m_cCells[i+1][j+1].getIsAlive() + m_cCells[i+1][j-1].getIsAlive()
+							+ m_cCells[i+1][j].getIsAlive();		
 			}
 		}	
 	}
@@ -173,16 +203,16 @@ class GOLCanvas extends Canvas {
 	public void calcNextStep () {
 		for(int i = 0; i < m_iHeight - 1; i++) {
 			for(int j = 0; j < m_iWidth - 1; j++) {
-				if (m_iPoints[i][j] == 1){
+				if (m_cCells[i][j].getIsAlive() == 1){
 					if((m_iNeighbours[i][j] < 2) || (m_iNeighbours[i][j] > 3)){
 						// cell dies of underpopulation or overcrowding
-						m_iPoints[i][j] = 0;
+						m_cCells[i][j].setIsAlive(false);
 					}
 				}
 				else {
 					if (m_iNeighbours[i][j] == 3) {
 						// cell becomes alive thanks to reproduction
-						m_iPoints[i][j] = 1;
+						m_cCells[i][j].setIsAlive(true);
 					}
 				}
 			}
@@ -196,9 +226,15 @@ class GOLCanvas extends Canvas {
 		aGraphics = cBackGroundImage.getGraphics();
 		for(int i = 0; i < m_iHeight; i++) {
 			for(int j = 0; j < m_iWidth; j++) {
-				if (m_iPoints[i][j] == 1){
-					aGraphics.drawLine(i, j, i, j);
+				if (m_cCells[i][j].getIsAlive() == 1){
+					aGraphics.setColor(Color.black);
 				}
+				else {
+					aGraphics.setColor(Color.white);
+
+				}	
+				aGraphics.fillRect(m_cCells[i][j].getPixCoordXBegin(), m_cCells[i][j].getPixCoordYBegin()
+						, m_iCellWidth, m_iCellWidth);
 			}
 		}		
 		// rendering is done, draw background image to on screen graphics
@@ -264,8 +300,8 @@ class GOLCell {
 		m_bIsAlive = abIsAlive;
 	}
 	
-	public Boolean getIsAlive() {
-		return m_bIsAlive;
+	public int getIsAlive() {
+		return m_bIsAlive? 1 : 0;
 	}
 }
 //class GOLCalculator implements Runnable {

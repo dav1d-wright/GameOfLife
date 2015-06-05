@@ -212,35 +212,60 @@ class GOLCanvas extends Canvas {
 }
 
 class GOLCell {
-	private int m_iPixCoordX; 	// upper left coordinate
-	private int m_iPixCoordY;	// upper left coordinate
+	private int m_iPixCoordXBegin; 	// left coordinate
+	private int m_iPixCoordYBegin;	// top coordinate
+	private int m_iPixCoordXEnd;	// right coordinate
+	private int m_iPixCoordYEnd;	// bottom coordinate
 	private int m_iCellCoordX;
 	private int m_iCellCoordY;
 	private int m_iWidth;
+	private Boolean m_bIsAlive;
 	
 	GOLCell () {
-		m_iPixCoordX = 0;
-		m_iPixCoordY = 0;
+		m_iPixCoordXBegin = 0;
+		m_iPixCoordYBegin = 0;
+		m_iPixCoordXEnd = 0;
+		m_iPixCoordYEnd = 0;
 		m_iCellCoordX = 0;
 		m_iCellCoordY = 0;
 		m_iWidth = 1;
+		m_bIsAlive = false;
 	}
 	
-	GOLCell (int aiWidth, int aiCellCoordX, int aiCellCoordY) {
+	GOLCell (int aiWidth, int aiCellCoordX, int aiCellCoordY, Boolean abIsalive) {
 		m_iCellCoordX = aiCellCoordX;
 		m_iCellCoordY = aiCellCoordY;
 		m_iWidth = aiWidth;
+		m_bIsAlive = abIsalive;
 		
-		m_iPixCoordX = m_iCellCoordX * m_iWidth;
-		m_iPixCoordY = m_iCellCoordY * m_iWidth;
+		m_iPixCoordXBegin = m_iCellCoordX * m_iWidth;
+		m_iPixCoordYBegin = m_iCellCoordY * m_iWidth;
+		m_iPixCoordXEnd = m_iWidth * (m_iCellCoordX + 1) - 1;
+		m_iPixCoordYEnd = m_iWidth * (m_iCellCoordY + 1) - 1;
 	}
 	
-	public int getPixCoordX () {
-		return m_iPixCoordX;
+	public int getPixCoordXBegin () {
+		return m_iPixCoordXBegin;
 	}
 	
-	public int getPixCoordY () {
-		return m_iPixCoordY;
+	public int getPixCoordYBegin () {
+		return m_iPixCoordYBegin;
+	}
+	
+	public int getPixCoordXEnd () {
+		return m_iPixCoordXEnd;
+	}
+	
+	public int getPixCoordYEnd () {
+		return m_iPixCoordYEnd;
+	}
+	
+	public void setIsAlive(Boolean abIsAlive) {
+		m_bIsAlive = abIsAlive;
+	}
+	
+	public Boolean getIsAlive() {
+		return m_bIsAlive;
 	}
 }
 //class GOLCalculator implements Runnable {

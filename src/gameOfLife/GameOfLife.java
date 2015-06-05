@@ -211,6 +211,38 @@ class GOLCanvas extends Canvas {
 	}
 }
 
+class GOLCell {
+	private int m_iPixCoordX; 	// upper left coordinate
+	private int m_iPixCoordY;	// upper left coordinate
+	private int m_iCellCoordX;
+	private int m_iCellCoordY;
+	private int m_iWidth;
+	
+	GOLCell () {
+		m_iPixCoordX = 0;
+		m_iPixCoordY = 0;
+		m_iCellCoordX = 0;
+		m_iCellCoordY = 0;
+		m_iWidth = 1;
+	}
+	
+	GOLCell (int aiWidth, int aiCellCoordX, int aiCellCoordY) {
+		m_iCellCoordX = aiCellCoordX;
+		m_iCellCoordY = aiCellCoordY;
+		m_iWidth = aiWidth;
+		
+		m_iPixCoordX = m_iCellCoordX * m_iWidth;
+		m_iPixCoordY = m_iCellCoordY * m_iWidth;
+	}
+	
+	public int getPixCoordX () {
+		return m_iPixCoordX;
+	}
+	
+	public int getPixCoordY () {
+		return m_iPixCoordY;
+	}
+}
 //class GOLCalculator implements Runnable {
 //	
 //}

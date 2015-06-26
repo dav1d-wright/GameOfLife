@@ -3,7 +3,6 @@ package gameOfLife;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import java.text.AttributedCharacterIterator;
 import javax.swing.*;
 import java.util.Random;
 
@@ -12,7 +11,7 @@ public class GameOfLife extends JFrame implements ActionListener
 	JButton cBStart;
 	JTextField cTSeed;
 	JLabel cLSeed;
-	String cSMsg = "";
+	String cSMsg = "Seed = ";
 	GOLCanvas cCanvas;
 	int iNumElements = 4;
 	int m_iCellWidth;
@@ -50,7 +49,6 @@ public class GameOfLife extends JFrame implements ActionListener
 		}
 	
 		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, m_dSeed, m_iCellWidth);
-		cCanvas.init();
 		cCanvas.setSize(iGameWidth * m_iCellWidth, iGameHeight * m_iCellWidth);		
 		
 		
@@ -113,13 +111,19 @@ public class GameOfLife extends JFrame implements ActionListener
 	
 	public void actionPerformed(ActionEvent aActionEvent) 
 	{
-		String str = aActionEvent.getActionCommand();
+		String strCmd = aActionEvent.getActionCommand();
 		
-		if(str.equals("Start")) 
+		if(strCmd.equals("Start")) 
 		{
-			cSMsg = "You pressed Start";
 			cCanvas.init();
+			cSMsg = "Seed = " + Double.toString(m_dSeed);
 		}
+		else if (aActionEvent.getSource() == cTSeed)
+		{
+			m_dSeed = Double.parseDouble(cTSeed.getText());
+			cCanvas.setSeed(m_dSeed);
+		}
+		
 		
 		this.update(this.getGraphics());
 	}
@@ -135,7 +139,7 @@ class GOLCanvas extends Canvas
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
 	private int m_iCellWidth;
-	
+		
 	GOLCanvas(int aWidth, int aHeight, double aSeed, int aCellWidth) 
 	{
 		m_iWidth = aWidth;
@@ -144,6 +148,7 @@ class GOLCanvas extends Canvas
 		m_iCellWidth = aCellWidth;
 		m_cRnd = new Random();
 		m_cCells = new GOLCell[m_iWidth][m_iHeight];
+		
 		for(int i = 0; i < m_iWidth; i++) 
 		{
 			for(int j = 0; j < m_iHeight; j++)
@@ -152,6 +157,8 @@ class GOLCanvas extends Canvas
 			}
 		}
 		
+		m_cRnd.setSeed(m_cRnd.nextLong());
+		
 		m_iNeighbours = new int[m_iWidth][m_iHeight];
 		cBackGroundImage = new BufferedImage(m_iWidth*m_iCellWidth, m_iHeight*m_iCellWidth, BufferedImage.TYPE_INT_RGB);
 
@@ -159,8 +166,6 @@ class GOLCanvas extends Canvas
 	
 	public void init() 
 	{
-		m_cRnd.setSeed(m_cRnd.nextLong());
-
 		for(int i = 0; i < m_iWidth; i++) 
 		{
 			for(int j = 0; j < m_iHeight; j++) 
@@ -176,6 +181,10 @@ class GOLCanvas extends Canvas
 		}
 	}
 	
+	public void setSeed(double aSeed)
+	{
+		m_dSeed = aSeed;
+	}
 	private int getRandomInt(double aProbability) 
 	{
 		return (m_cRnd.nextDouble() < m_dSeed) ? 1 : 0;

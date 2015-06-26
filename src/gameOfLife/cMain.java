@@ -13,7 +13,7 @@ public class cMain {
 		int gameWidth = (int)screenSize.getWidth() - 600;
 		int gameHeight = (int)screenSize.getHeight() - 150;
 		
-		GameOfLife cGameOfLife = new GameOfLife("Conway's Game Of Life", windowWidth, windowHeight, gameWidth, gameHeight, 4);		
+		GameOfLife cGameOfLife = new GameOfLife("Conway's Game Of Life", windowWidth, windowHeight, gameWidth, gameHeight, 3);		
 		
 		cGameOfLife.setVisible(true);
 		while(true){

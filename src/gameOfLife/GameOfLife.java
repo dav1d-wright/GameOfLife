@@ -131,7 +131,7 @@ class GOLCanvas extends Canvas
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
-	private static final int m_iCellWidth = 5;
+	private static final int m_iCellWidth = 4;
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) 
 	{
@@ -139,16 +139,16 @@ class GOLCanvas extends Canvas
 		m_iHeight = aHeight;
 		m_dSeed = aSeed;
 		m_cRnd = new Random();
-		m_cCells = new GOLCell[m_iHeight][m_iWidth];
-		for(int i = 0; i < m_iHeight; i++) 
+		m_cCells = new GOLCell[m_iWidth][m_iHeight];
+		for(int i = 0; i < m_iWidth; i++) 
 		{
-			for(int j = 0; j < m_iWidth; j++)
+			for(int j = 0; j < m_iHeight; j++)
 			{
 					m_cCells[i][j] = new GOLCell(m_iCellWidth, i, j, false);
 			}
 		}
 		
-		m_iNeighbours = new int[m_iHeight][m_iWidth];
+		m_iNeighbours = new int[m_iWidth][m_iHeight];
 		cBackGroundImage = new BufferedImage(m_iWidth*m_iCellWidth, m_iHeight*m_iCellWidth, BufferedImage.TYPE_INT_RGB);
 
 	}
@@ -157,9 +157,9 @@ class GOLCanvas extends Canvas
 	{
 		m_cRnd.setSeed(m_cRnd.nextLong());
 
-		for(int i = 0; i < m_iHeight; i++) 
+		for(int i = 0; i < m_iWidth; i++) 
 		{
-			for(int j = 0; j < m_iWidth; j++) 
+			for(int j = 0; j < m_iHeight; j++) 
 			{
 				if (this.getRandomInt(m_dSeed) == 1) 
 				{
@@ -296,9 +296,9 @@ class GOLCanvas extends Canvas
 	
 	public void calcNextStep () 
 	{
-		for(int i = 0; i <= m_iHeight - 1; i++) 
+		for(int i = 0; i <= m_iWidth - 1; i++) 
 		{
-			for(int j = 0; j <= m_iWidth - 1; j++) 
+			for(int j = 0; j <= m_iHeight - 1; j++) 
 			{
 				if (m_cCells[i][j].getIsAlive() == 1)
 				{
@@ -327,9 +327,9 @@ class GOLCanvas extends Canvas
 		// render on background image
 		aGraphics = cBackGroundImage.getGraphics();
 		
-		for(int i = 0; i < m_iHeight; i++) 
+		for(int i = 0; i < m_iWidth; i++) 
 		{
-			for(int j = 0; j < m_iWidth; j++) 
+			for(int j = 0; j < m_iHeight; j++) 
 			{
 				if (m_cCells[i][j].getIsAlive() == 1)
 				{

@@ -4,7 +4,7 @@ package gameOfLife;
 public class cMain {
 
 	public static void main(String[] args) {
-		GameOfLife cGameOfLife = new GameOfLife("Conway's Game Of Life", 1200, 1200, 150, 150);		
+		GameOfLife cGameOfLife = new GameOfLife("Conway's Game Of Life", 1900, 1200, 300, 200);		
 		
 		cGameOfLife.setVisible(true);
 		while(true){

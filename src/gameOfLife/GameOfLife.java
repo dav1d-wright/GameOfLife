@@ -131,7 +131,7 @@ class GOLCanvas extends Canvas
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
-	private static final int m_iCellWidth = 4;
+	private static final int m_iCellWidth = 10;
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) 
 	{
@@ -217,7 +217,7 @@ class GOLCanvas extends Canvas
 				// left column
 				for(int countX = 0; countX <=  1; countX++) 
 				{
-					if (!((countX != 0) && (countY != j))) 
+					if (!((countX == 0) && (countY == j))) 
 					{
 						m_iNeighbours[0][j] += m_cCells[countX][countY].getIsAlive(); 
 					}
@@ -228,7 +228,7 @@ class GOLCanvas extends Canvas
 				for(int countX = m_iWidth - 2; countX <= m_iWidth - 1; countX++) 
 				{
 
-					if (!((countX != m_iWidth - 1) && (countY != j))) 
+					if (!((countX == m_iWidth - 1) && (countY == j))) 
 					{
 						m_iNeighbours[m_iWidth - 1][j] += m_cCells[countX][countY].getIsAlive(); 
 					}
@@ -250,7 +250,7 @@ class GOLCanvas extends Canvas
 				// top row
 				for(int countY = 0; countY <=  1; countY++) 
 				{
-					if (!((countX != i) && (countY != 0))) 
+					if (!((countX == i) && (countY == 0))) 
 					{
 						m_iNeighbours[i][0] += m_cCells[countX][countY].getIsAlive(); 
 					}
@@ -262,7 +262,7 @@ class GOLCanvas extends Canvas
 				// bottom row
 				for(int countY = m_iHeight - 2; countY <= m_iHeight - 1; countY++) 
 				{
-					if (!((countX != i) && (countY != m_iHeight - 1))) 
+					if (!((countX == i) && (countY == m_iHeight - 1))) 
 					{
 						m_iNeighbours[i][m_iHeight - 1] += m_cCells[countX][countY].getIsAlive(); 
 					}

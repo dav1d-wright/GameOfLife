@@ -131,7 +131,7 @@ class GOLCanvas extends Canvas
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
-	private static final int m_iCellWidth = 10;
+	private static final int m_iCellWidth = 5;
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) 
 	{
@@ -296,9 +296,9 @@ class GOLCanvas extends Canvas
 	
 	public void calcNextStep () 
 	{
-		for(int i = 0; i < m_iHeight - 1; i++) 
+		for(int i = 0; i <= m_iHeight - 1; i++) 
 		{
-			for(int j = 0; j < m_iWidth - 1; j++) 
+			for(int j = 0; j <= m_iWidth - 1; j++) 
 			{
 				if (m_cCells[i][j].getIsAlive() == 1)
 				{

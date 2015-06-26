@@ -18,7 +18,7 @@ public class GameOfLife extends JFrame implements ActionListener
 	int iGameWidth;
 	int iGameHeight;
 	private Boolean m_bRunning;
-	private double m_dSeed = 0.6;
+	private double m_dSeed = 0.4;
 	
 	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight) 
 	{
@@ -131,7 +131,7 @@ class GOLCanvas extends Canvas
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
-	private static final int m_iCellWidth = 3;
+	private static final int m_iCellWidth = 4;
 	
 	GOLCanvas(int aWidth, int aHeight, double aSeed) 
 	{
@@ -184,23 +184,27 @@ class GOLCanvas extends Canvas
 	
 	public void countNeighbours () 
 	{
-		// count neighbours for corner elements
+		// count neighbours for corner elements: this is a toroid world, wrap around accordingly
 		m_iNeighbours[0][0] = m_cCells[0][1].getIsAlive() + m_cCells[1][1].getIsAlive() + m_cCells[1][0].getIsAlive()
 				+ m_cCells[m_iWidth - 1][m_iHeight - 1].getIsAlive() + m_cCells[0][m_iHeight - 1].getIsAlive()
-				+ m_cCells[m_iWidth - 1][0].getIsAlive();
+				+ m_cCells[m_iWidth - 1][0].getIsAlive() + m_cCells[1][m_iHeight - 1].getIsAlive() 
+				+ m_cCells[m_iWidth - 1][1].getIsAlive();
 		
 		m_iNeighbours[0][m_iHeight-1] = m_cCells[0][m_iHeight-2].getIsAlive() + m_cCells[1][m_iHeight-2].getIsAlive()
 				+ m_cCells[1][m_iHeight-1].getIsAlive() + m_cCells[m_iWidth - 1][m_iHeight-1].getIsAlive()
-				+ m_cCells[0][0].getIsAlive()  + m_cCells[m_iWidth - 1][0].getIsAlive();
+				+ m_cCells[0][0].getIsAlive()  + m_cCells[m_iWidth - 1][0].getIsAlive()
+				+ m_cCells[m_iWidth - 1][m_iHeight - 2].getIsAlive() + m_cCells[1][0].getIsAlive();
 		
 		m_iNeighbours[m_iWidth-1][m_iHeight-1] = m_cCells[m_iWidth-1][m_iHeight-2].getIsAlive()
 				+ m_cCells[m_iWidth-2][m_iHeight-2].getIsAlive() + m_cCells[m_iWidth-2][m_iHeight-1].getIsAlive()
 				+ m_cCells[0][m_iHeight-1].getIsAlive() + m_cCells[m_iWidth - 1][0].getIsAlive()
-				+ m_cCells[0][0].getIsAlive();
+				+ m_cCells[0][0].getIsAlive() + m_cCells[0][m_iHeight - 2].getIsAlive()
+				+ m_cCells[m_iWidth - 2][0].getIsAlive();
 		
 		m_iNeighbours[m_iWidth-1][0] = m_cCells[m_iWidth-1][1].getIsAlive() + m_cCells[m_iWidth-2][1].getIsAlive()
 				+ m_cCells[m_iWidth-2][0].getIsAlive() + m_cCells[m_iWidth - 1][m_iHeight-1].getIsAlive()
-				+ m_cCells[0][m_iHeight-1].getIsAlive() + m_cCells[0][0].getIsAlive();
+				+ m_cCells[0][m_iHeight-1].getIsAlive() + m_cCells[m_iWidth - 2][m_iHeight-1].getIsAlive()
+				+ m_cCells[0][0].getIsAlive() + m_cCells[0][1].getIsAlive();
 
 		// count neighbours of first and last columns without corners
 		for (int j = 1; j < m_iHeight - 1; j++) 
@@ -230,7 +234,7 @@ class GOLCanvas extends Canvas
 					}
 				}
 				// wraparound of right column
-				m_iNeighbours[m_iWidth -1 ][j] += m_cCells[0][countY].getIsAlive(); 
+				m_iNeighbours[m_iWidth -1][j] += m_cCells[0][countY].getIsAlive(); 
 
 			}	
 		}

@@ -7,7 +7,8 @@ import java.text.AttributedCharacterIterator;
 import javax.swing.*;
 import java.util.Random;
 
-public class GameOfLife extends JFrame implements ActionListener{
+public class GameOfLife extends JFrame implements ActionListener
+{
 	JButton cBStart;
 	JTextField cTSeed;
 	JLabel cLSeed;
@@ -17,8 +18,10 @@ public class GameOfLife extends JFrame implements ActionListener{
 	int iGameWidth;
 	int iGameHeight;
 	private Boolean m_bRunning;
+	private double m_dSeed = 0.6;
 	
-	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight) {
+	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight) 
+	{
 		super(aTitle);
 		this.setSize(aFrameWidth, aFrameHeight);
 		iGameWidth = aGameWidth;
@@ -26,8 +29,10 @@ public class GameOfLife extends JFrame implements ActionListener{
 		m_bRunning = false;
 		
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
+        this.addWindowListener(new WindowAdapter() 
+        {
+            public void windowClosing(WindowEvent e)
+            {
                 stop();
                 super.windowClosing(e);
                 System.exit(0);
@@ -37,11 +42,12 @@ public class GameOfLife extends JFrame implements ActionListener{
         GridBagLayout cLayout = new GridBagLayout();
 		GridBagConstraints[] cConstraints = new GridBagConstraints[iNumElements];		
 		
-		for(int i = 0; i < iNumElements; i++) {
+		for(int i = 0; i < iNumElements; i++) 
+		{
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, 0.2);
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, m_dSeed);
 		cCanvas.init();
 		cCanvas.setSize(iGameWidth * cCanvas.getCellWidth(), iGameHeight * cCanvas.getCellWidth());		
 		
@@ -82,24 +88,32 @@ public class GameOfLife extends JFrame implements ActionListener{
 		this.add(cCanvas);
 		this.repaint();
 	}
-	public synchronized void stop() {
-		if (m_bRunning) {
+	
+	public synchronized void stop() 
+	{
+		if (m_bRunning) 
+		{
 			m_bRunning = false;
 			boolean bRetry = true;
-			while (bRetry) {
+			while (bRetry) 
+			{
 				// TODO implement rest of stop from stackexchange answer
 			}
 		}
 	}
-	public void paint (Graphics aGraphics){
+	
+	public void paint (Graphics aGraphics)
+	{
 		aGraphics.drawString("This is in frame window", 10, 40);
 		aGraphics.drawString(cSMsg, 10, 50);
 	}
 	
-	public void actionPerformed(ActionEvent aActionEvent) {
+	public void actionPerformed(ActionEvent aActionEvent) 
+	{
 		String str = aActionEvent.getActionCommand();
 		
-		if(str.equals("Start")) {
+		if(str.equals("Start")) 
+		{
 			cSMsg = "You pressed Start";
 			cCanvas.init();
 		}
@@ -108,7 +122,8 @@ public class GameOfLife extends JFrame implements ActionListener{
 	}
 }
 
-class GOLCanvas extends Canvas {
+class GOLCanvas extends Canvas 
+{
 	private int m_iWidth;
 	private int m_iHeight;
 	private GOLCell[][] m_cCells;
@@ -118,14 +133,17 @@ class GOLCanvas extends Canvas {
 	private BufferedImage cBackGroundImage = null;
 	private static final int m_iCellWidth = 3;
 	
-	GOLCanvas(int aWidth, int aHeight, double aSeed) {
+	GOLCanvas(int aWidth, int aHeight, double aSeed) 
+	{
 		m_iWidth = aWidth;
 		m_iHeight = aHeight;
 		m_dSeed = aSeed;
 		m_cRnd = new Random();
 		m_cCells = new GOLCell[m_iHeight][m_iWidth];
-		for(int i = 0; i < m_iHeight; i++) {
-			for(int j = 0; j < m_iWidth; j++) {
+		for(int i = 0; i < m_iHeight; i++) 
+		{
+			for(int j = 0; j < m_iWidth; j++)
+			{
 					m_cCells[i][j] = new GOLCell(m_iCellWidth, i, j, false);
 			}
 		}
@@ -135,14 +153,18 @@ class GOLCanvas extends Canvas {
 
 	}
 	
-	public void init() {
+	public void init() 
+	{
 		m_cRnd.setSeed(m_cRnd.nextLong());
 
-		for(int i = 0; i < m_iHeight; i++) {
-			for(int j = 0; j < m_iWidth; j++) {
-				if (this.getRandomInt(m_dSeed) == 1) {
+		for(int i = 0; i < m_iHeight; i++) 
+		{
+			for(int j = 0; j < m_iWidth; j++) 
+			{
+				if (this.getRandomInt(m_dSeed) == 1) 
+				{
 					m_cCells[i][j].setIsAlive(true);
-					}
+				}
 				else {
 					m_cCells[i][j].setIsAlive(false);
 				}
@@ -150,14 +172,18 @@ class GOLCanvas extends Canvas {
 		}
 	}
 	
-	private int getRandomInt(double aProbability) {
+	private int getRandomInt(double aProbability) 
+	{
 		return (m_cRnd.nextDouble() < m_dSeed) ? 1 : 0;
 	}
 	
-	public int getCellWidth () {
+	public int getCellWidth ()
+	{
 		return m_iCellWidth;
 	}
-	public void countNeighbours () {
+	
+	public void countNeighbours () 
+	{
 		// count neighbours for corner elements
 		m_iNeighbours[0][0] = m_cCells[0][1].getIsAlive() + m_cCells[1][1].getIsAlive() + m_cCells[1][0].getIsAlive();
 		
@@ -171,47 +197,97 @@ class GOLCanvas extends Canvas {
 				+ m_cCells[m_iWidth-2][0].getIsAlive();
 
 		// count neighbours of first and last columns without corners
-		for (int i = 1; i < m_iWidth - 1; i++) {
-			m_iNeighbours[i][0] = m_cCells[i-1][0].getIsAlive() + m_cCells[i][1].getIsAlive() + m_cCells[i+1][0].getIsAlive()
-					+ m_cCells[i-1][1].getIsAlive() + m_cCells[i+1][1].getIsAlive();
+		for (int j = 1; j < m_iHeight - 1; j++) 
+		{
+			m_iNeighbours[0][j] = 0;
+			m_iNeighbours[m_iWidth - 1][j] = 0;
 			
-			m_iNeighbours[i][m_iHeight-1] = m_cCells[i][m_iWidth-2].getIsAlive() + m_cCells[i-1][m_iWidth-1].getIsAlive()
-					+ m_cCells[i+1][m_iWidth-1].getIsAlive() + m_cCells[i-1][m_iWidth-2].getIsAlive() + 
-					m_cCells[i+1][m_iWidth-2].getIsAlive();
+			for(int countY = j - 1; countY <= j + 1; countY++) 
+			{
+				for(int countX = 0; countX <=  1; countX++) 
+				{
+					if (!((countX != 0) && (countY != j))) 
+					{
+						m_iNeighbours[0][j] += m_cCells[countX][countY].getIsAlive(); 
+					}
+				}
+				
+				for(int countX = m_iWidth - 2; countX <= m_iWidth - 1; countX++) 
+				{
+
+					if (!((countX != m_iWidth - 1) && (countY != j))) 
+					{
+						m_iNeighbours[m_iWidth - 1][j] += m_cCells[countX][countY].getIsAlive(); 
+					}
+				}
+			}	
 		}
 		
 		// count neighbours of first and last rows without corners
-		for (int i = 1; i < m_iHeight - 1; i++) {
-			m_iNeighbours[0][i] = m_cCells[0][i-1].getIsAlive() + m_cCells[1][i].getIsAlive() + m_cCells[0][i+1].getIsAlive()
-					+ m_cCells[1][i-1].getIsAlive() + m_cCells[1][i+1].getIsAlive();
-			
-			m_iNeighbours[m_iWidth-1][i] = m_cCells[m_iHeight-1][i-1].getIsAlive() + m_cCells[m_iHeight-2][i].getIsAlive()
-					+ m_cCells[m_iHeight-1][i+1].getIsAlive() + m_cCells[m_iHeight-2][i-1].getIsAlive()
-					+ m_cCells[m_iHeight-2][i+1].getIsAlive();
+		for (int i = 1; i < m_iWidth - 1; i++)
+		{			
+			m_iNeighbours[i][0] = 0;
+			m_iNeighbours[i][m_iHeight - 1] = 0;
+
+			for(int countX = i - 1; countX <= i + 1; countX++) 
+			{
+				for(int countY = 0; countY <=  1; countY++) 
+				{
+					if (!((countX != i) && (countY != 0))) 
+					{
+						m_iNeighbours[i][0] += m_cCells[countX][countY].getIsAlive(); 
+					}
+				}
+				
+				for(int countY = m_iHeight - 2; countY <= m_iHeight - 1; countY++) 
+				{
+					if (!((countX != i) && (countY != m_iHeight - 1))) 
+					{
+						m_iNeighbours[i][m_iHeight - 1] += m_cCells[countX][countY].getIsAlive(); 
+					}
+				}
+			}		
 		}
 		
 		// count neighbours of inner matrix elements without corners and first/last rows
-		for(int i = 1; i < m_iHeight - 1; i++) {
-			for(int j = 1; j < m_iWidth - 1; j++) {
-					m_iNeighbours[i][j] = m_cCells[i-1][j].getIsAlive() + m_cCells[i-1][j-1].getIsAlive()
-							+ m_cCells[i-1][j+1].getIsAlive() + m_cCells[i][j-1].getIsAlive() 
-							+ m_cCells[i][j+1].getIsAlive() + m_cCells[i+1][j+1].getIsAlive() + m_cCells[i+1][j-1].getIsAlive()
-							+ m_cCells[i+1][j].getIsAlive();		
+		for(int i = 1; i < m_iWidth - 1; i++) 
+		{
+			for(int j = 1; j < m_iHeight - 1; j++) 
+			{
+				m_iNeighbours[i][j] = 0;
+				
+				for(int countX = i - 1; countX <= i + 1; countX++) 
+				{
+					for(int countY = j - 1; countY <= j + 1; countY++) 
+					{
+						if (!((countX == i) && (countY == j))) 
+						{
+							m_iNeighbours[i][j] += m_cCells[countX][countY].getIsAlive(); 
+						}
+					}	
+				}
 			}
 		}	
 	}
 	
-	public void calcNextStep () {
-		for(int i = 0; i < m_iHeight - 1; i++) {
-			for(int j = 0; j < m_iWidth - 1; j++) {
-				if (m_cCells[i][j].getIsAlive() == 1){
-					if((m_iNeighbours[i][j] < 2) || (m_iNeighbours[i][j] > 3)){
+	public void calcNextStep () 
+	{
+		for(int i = 0; i < m_iHeight - 1; i++) 
+		{
+			for(int j = 0; j < m_iWidth - 1; j++) 
+			{
+				if (m_cCells[i][j].getIsAlive() == 1)
+				{
+					if((m_iNeighbours[i][j] < 2) || (m_iNeighbours[i][j] > 3))
+					{
 						// cell dies of underpopulation or overcrowding
 						m_cCells[i][j].setIsAlive(false);
 					}
 				}
-				else {
-					if (m_iNeighbours[i][j] == 3) {
+				else 
+				{
+					if (m_iNeighbours[i][j] == 3) 
+					{
 						// cell becomes alive thanks to reproduction
 						m_cCells[i][j].setIsAlive(true);
 					}
@@ -220,19 +296,24 @@ class GOLCanvas extends Canvas {
 		}
 	}
 	@Override
-	public void paint(Graphics aGraphics) {
+	public void paint(Graphics aGraphics) 
+	{
 		// store on screen graphics
 		Graphics cScreenGraphics = aGraphics;
 		// render on background image
 		aGraphics = cBackGroundImage.getGraphics();
-		for(int i = 0; i < m_iHeight; i++) {
-			for(int j = 0; j < m_iWidth; j++) {
-				if (m_cCells[i][j].getIsAlive() == 1){
+		
+		for(int i = 0; i < m_iHeight; i++) 
+		{
+			for(int j = 0; j < m_iWidth; j++) 
+			{
+				if (m_cCells[i][j].getIsAlive() == 1)
+				{
 					aGraphics.setColor(Color.black);
 				}
-				else {
+				else 
+				{
 					aGraphics.setColor(Color.white);
-
 				}	
 				aGraphics.fillRect(m_cCells[i][j].getPixCoordXBegin(), m_cCells[i][j].getPixCoordYBegin()
 						, m_iCellWidth, m_iCellWidth);
@@ -243,12 +324,14 @@ class GOLCanvas extends Canvas {
 	}
 	
 	@Override
-	public void update(Graphics aGraphics) {
+	public void update(Graphics aGraphics)
+	{
 		paint(aGraphics);
 	}
 }
 
-class GOLCell {
+class GOLCell 
+{
 	private int m_iPixCoordXBegin; 	// left coordinate
 	private int m_iPixCoordYBegin;	// top coordinate
 	private int m_iPixCoordXEnd;	// right coordinate
@@ -258,7 +341,8 @@ class GOLCell {
 	private int m_iWidth;
 	private Boolean m_bIsAlive;
 	
-	GOLCell () {
+	GOLCell () 
+	{
 		m_iPixCoordXBegin = 0;
 		m_iPixCoordYBegin = 0;
 		m_iPixCoordXEnd = 0;
@@ -269,7 +353,8 @@ class GOLCell {
 		m_bIsAlive = false;
 	}
 	
-	GOLCell (int aiWidth, int aiCellCoordX, int aiCellCoordY, Boolean abIsalive) {
+	GOLCell (int aiWidth, int aiCellCoordX, int aiCellCoordY, Boolean abIsalive) 
+	{
 		m_iCellCoordX = aiCellCoordX;
 		m_iCellCoordY = aiCellCoordY;
 		m_iWidth = aiWidth;
@@ -281,27 +366,33 @@ class GOLCell {
 		m_iPixCoordYEnd = m_iWidth * (m_iCellCoordY + 1) - 1;
 	}
 	
-	public int getPixCoordXBegin () {
+	public int getPixCoordXBegin () 
+	{
 		return m_iPixCoordXBegin;
 	}
 	
-	public int getPixCoordYBegin () {
+	public int getPixCoordYBegin () 
+	{
 		return m_iPixCoordYBegin;
 	}
 	
-	public int getPixCoordXEnd () {
+	public int getPixCoordXEnd () 
+	{
 		return m_iPixCoordXEnd;
 	}
 	
-	public int getPixCoordYEnd () {
+	public int getPixCoordYEnd () 
+	{
 		return m_iPixCoordYEnd;
 	}
 	
-	public void setIsAlive(Boolean abIsAlive) {
+	public void setIsAlive(Boolean abIsAlive) 
+	{
 		m_bIsAlive = abIsAlive;
 	}
 	
-	public int getIsAlive() {
+	public int getIsAlive() 
+	{
 		return m_bIsAlive? 1 : 0;
 	}
 }

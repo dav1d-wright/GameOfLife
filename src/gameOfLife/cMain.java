@@ -10,6 +10,7 @@ public class cMain {
 			cGameOfLife.cCanvas.countNeighbours();
 			cGameOfLife.cCanvas.calcNextStep();
 			cGameOfLife.cCanvas.update(cGameOfLife.cCanvas.getGraphics());			
+			for(int i = 0; i < 0xFFFFFF; i++);
 		}
 	}
 

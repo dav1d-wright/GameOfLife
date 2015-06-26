@@ -15,6 +15,7 @@ public class GameOfLife extends JFrame implements ActionListener
 	String cSMsg = "";
 	GOLCanvas cCanvas;
 	int iNumElements = 4;
+	int m_iCellWidth;
 	int iGameWidth; // number of cells
 	int iGameHeight; // number of cells
 	private Boolean m_bRunning;
@@ -24,8 +25,9 @@ public class GameOfLife extends JFrame implements ActionListener
 	{
 		super(aTitle);
 		this.setSize(aFrameWidth, aFrameHeight);
-		iGameWidth = aGameWidth / aCellWidth; // total number of pixels / number of pixels per cell = number of cells
-		iGameHeight = aGameHeight / aCellWidth; // total number of pixels / number of pixels per cell = number of cells
+		m_iCellWidth = aCellWidth;
+		iGameWidth = aGameWidth / m_iCellWidth; // total number of pixels / number of pixels per cell = number of cells
+		iGameHeight = aGameHeight / m_iCellWidth; // total number of pixels / number of pixels per cell = number of cells
 		m_bRunning = false;
 		
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -47,9 +49,9 @@ public class GameOfLife extends JFrame implements ActionListener
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, m_dSeed, aCellWidth);
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, m_dSeed, m_iCellWidth);
 		cCanvas.init();
-		cCanvas.setSize(iGameWidth * aCellWidth, iGameHeight * aCellWidth);		
+		cCanvas.setSize(iGameWidth * m_iCellWidth, iGameHeight * m_iCellWidth);		
 		
 		
 		cConstraints[0].gridx = 0;
@@ -103,6 +105,7 @@ public class GameOfLife extends JFrame implements ActionListener
 	
 	public void paint (Graphics aGraphics)
 	{
+		cCanvas.setSize(new Dimension(iGameWidth * m_iCellWidth, iGameHeight * m_iCellWidth));
 		this.paintComponents(aGraphics);
 		aGraphics.drawString("This is in frame window", 10, 40);
 		aGraphics.drawString(cSMsg, 10, 50);

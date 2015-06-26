@@ -15,17 +15,17 @@ public class GameOfLife extends JFrame implements ActionListener
 	String cSMsg = "";
 	GOLCanvas cCanvas;
 	int iNumElements = 4;
-	int iGameWidth;
-	int iGameHeight;
+	int iGameWidth; // number of cells
+	int iGameHeight; // number of cells
 	private Boolean m_bRunning;
 	private double m_dSeed = 0.4;
 	
-	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight) 
+	GameOfLife (String aTitle, int aFrameWidth, int aFrameHeight, int aGameWidth, int aGameHeight, int aCellWidth) 
 	{
 		super(aTitle);
 		this.setSize(aFrameWidth, aFrameHeight);
-		iGameWidth = aGameWidth;
-		iGameHeight = aGameHeight;
+		iGameWidth = aGameWidth / aCellWidth; // total number of pixels / number of pixels per cell = number of cells
+		iGameHeight = aGameHeight / aCellWidth; // total number of pixels / number of pixels per cell = number of cells
 		m_bRunning = false;
 		
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -47,9 +47,9 @@ public class GameOfLife extends JFrame implements ActionListener
 			cConstraints[i] = new GridBagConstraints();
 		}
 	
-		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, m_dSeed);
+		cCanvas = new GOLCanvas(iGameWidth, iGameHeight, m_dSeed, aCellWidth);
 		cCanvas.init();
-		cCanvas.setSize(iGameWidth * cCanvas.getCellWidth(), iGameHeight * cCanvas.getCellWidth());		
+		cCanvas.setSize(iGameWidth * aCellWidth, iGameHeight * aCellWidth);		
 		
 		
 		cConstraints[0].gridx = 0;
@@ -81,7 +81,6 @@ public class GameOfLife extends JFrame implements ActionListener
 		cLayout.setConstraints(cCanvas, cConstraints[3]);
 		
 		this.setLayout(cLayout);
-		this.setBackground(Color.white);
 		this.add(cTSeed);
 		this.add(cLSeed);
 		this.add(cBStart);
@@ -104,6 +103,7 @@ public class GameOfLife extends JFrame implements ActionListener
 	
 	public void paint (Graphics aGraphics)
 	{
+		this.paintComponents(aGraphics);
 		aGraphics.drawString("This is in frame window", 10, 40);
 		aGraphics.drawString(cSMsg, 10, 50);
 	}
@@ -131,13 +131,14 @@ class GOLCanvas extends Canvas
 	private double m_dSeed;
 	private Random m_cRnd;
 	private BufferedImage cBackGroundImage = null;
-	private static final int m_iCellWidth = 4;
+	private int m_iCellWidth;
 	
-	GOLCanvas(int aWidth, int aHeight, double aSeed) 
+	GOLCanvas(int aWidth, int aHeight, double aSeed, int aCellWidth) 
 	{
 		m_iWidth = aWidth;
 		m_iHeight = aHeight;
 		m_dSeed = aSeed;
+		m_iCellWidth = aCellWidth;
 		m_cRnd = new Random();
 		m_cCells = new GOLCell[m_iWidth][m_iHeight];
 		for(int i = 0; i < m_iWidth; i++) 
